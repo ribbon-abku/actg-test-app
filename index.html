@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8" />
+
+<style id="webmakerstyle">
+label {
+  display: block;
+  margin-bottom: 5px;
+}
+.long {
+  width: 300px;
+}
+</style>
+</head>
+<body>
+<h3>ACTG: Test App via CORS</h3>
+<form id="token">
+  <label>Base URL: <input type="text" name="baseUrl" value="http://localhost:8888/actg/token" class="long" /></label>
+  <fieldset>
+    <legend>Token</legend>
+    <label>Identifier: <input type="text" name="identifier" value="user1"/></label>
+    <button type="submit">Request</button>
+  </fieldset>
+</form>
+<br>
+<fieldset>
+  <legend>Logger</legend>
+  <pre id="logger"></pre>
+</fieldset>
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script>
+$('form#token').on('submit', (e) => {
+  e.preventDefault();
+  let baseUrl = $('form#token input[name="baseUrl"]').val();
+  var cargo = {
+    identifier: $('form#token input[name="identifier"]').val()
+  };
+  var settings = {
+    "async": true,
+	  "crossDomain": true,
+	  "url": baseUrl + "?" + toURLQuery(cargo),
+	  "method": "GET",
+	  "headers": {
+	    "content-type": "application/json",
+	    "cache-control": "no-cache"
+	  }
+	};
+  logIt('Requesting: ' + settings.url);
+	$.ajax(settings).done((response) => {
+	  logIt("Success: " + JSON.stringify(response, null, 2));
+	}).fail((jqxhr, textStatus, error) => {
+	  logIt("Failed: " + textStatus + ', ' +  error );
+	});
+});
+
+function toURLQuery(json) {
+  return Object.keys(json).map(function (k) {
+    return encodeURIComponent(k) + '=' + encodeURIComponent(json[k])
+  }).join('&');
+}
+
+function logIt(msg) {
+  let txt = $('#logger').text() + '\n' + msg;
+  $('#logger').text(txt);
+}
+</script>
+</body>
+</html>
