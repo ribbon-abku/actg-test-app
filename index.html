@@ -43,8 +43,7 @@ $('form#token').on('submit', (e) => {
 	  "url": baseUrl + "?" + toURLQuery(cargo),
 	  "method": "GET",
 	  "headers": {
-	    "content-type": "application/json",
-	    "cache-control": "no-cache"
+	    "content-type": "application/json"
 	  }
 	};
   logIt('Requesting: ' + settings.url);
